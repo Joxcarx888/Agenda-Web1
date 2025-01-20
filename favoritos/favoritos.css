@@ -51,16 +51,3 @@
   border-color: #f1c40f; 
 }
 
-.favorite-star {
-  font-size: 1.5rem;
-  color: gray;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-.favorite-star.active {
-  color: gold;
-}
-
-
-
-  
