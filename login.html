@@ -28,7 +28,7 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="#">Contactar Soporte</a></li>
-                <li><a class="dropdown-item" href="#">Planes</a></li>
+                <li><a class="dropdown-item" href="https://www.movistar.com.mx/planes">Planes</a></li>
               </ul>
             </li>
           </ul>
@@ -41,7 +41,7 @@
         <div class="col-12 text-center">
           <h2>¡Bienvenido!</h2>
           <p>Inicie sesión para continuar</p>
-          <form id="loginForm">
+          <form id="FormularioLogin">
             <div class="mb-3">
               <label for="username" class="form-label">Nombre de usuario</label>
               <input type="text" class="form-control" id="username" placeholder="Ingrese su nombre de usuario" required>
@@ -57,7 +57,7 @@
     </div>
 
     <script>
-      document.getElementById('loginForm').addEventListener('submit', function (event) {
+      document.getElementById('FormularioLogin').addEventListener('submit', function (event) {
     event.preventDefault();
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();

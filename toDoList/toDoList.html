@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenda Telefónica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="toDoList.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Logo_Movistar.svg/1024px-Logo_Movistar.svg.png"
+          alt="Logo" class="navbar-logo">
+        <h1 class="navbar-text">Lista de Pendientes</h1>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/login.html">Inicio</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Servicios
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">Contactar Soporte</a></li>
+              <li><a class="dropdown-item" href="https://www.movistar.com.mx/planes">Planes</a></li>
+            </ul>
+          </li>
+        </ul>
+        <button class="profile-image-button" data-bs-toggle="modal" data-bs-target="#userModal">
+          <img src="https://cdn-icons-png.flaticon.com/512/456/456212.png" alt="Perfil" />
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 align-items-center">
+    <h2>Agregar Tarea</h2>
+    <form id="FormularioTarea">
+      <div class="mb-3">
+        <label for="nombreTarea" class="form-label">Nombre de la Tarea</label>
+        <input type="text" class="form-control" id="nombreTarea" placeholder="Escribe el nombre de la tarea" required>
+      </div>
+      <div class="mb-3">
+        <label for="descripcionTarea" class="form-label">Descripción</label>
+        <textarea class="form-control" id="descripcionTarea" placeholder="Escribe la descripción de la tarea"
+          required></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="prioridadTarea" class="form-label">Prioridad</label>
+        <select class="form-select" id="prioridadTarea" required>
+          <option value="Urgente">Urgente</option>
+          <option value="Media">Media</option>
+          <option value="Baja">Baja</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="agregarTarea()">Agregar Tarea</button>
+    </form>
+
+    <h3 class="mt-5">Lista de Tareas</h3>
+    <div class="d-flex justify-content-between mb-3">
+      <button class="btn btn-danger" onclick="ordenarTareas('asc')">Ordenar Ascendemente</button>
+      <button class="btn btn-success" onclick="ordenarTareas('desc')">Ordenar Descendente</button>
+    </div>
+    <ul id="listaTareas" class="list-group">
+    </ul>
+  </div>
+
+  <div class="modal fade" id="editarTareaModal" tabindex="-1" aria-labelledby="editarTareaModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editarTareaModalLabel">Editar Tarea</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="FormularioEditarTarea">
+            <div class="mb-3">
+              <label for="editarNombreTarea" class="form-label">Nombre de la Tarea</label>
+              <input type="text" class="form-control" id="editarNombreTarea" required>
+            </div>
+            <div class="mb-3">
+              <label for="editarDescripcionTarea" class="form-label">Descripción</label>
+              <textarea class="form-control" id="editarDescripcionTarea" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="editarPrioridadTarea" class="form-label">Prioridad</label>
+              <select class="form-select" id="editarPrioridadTarea" required>
+                <option value="Urgente">Urgente</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="guardarCambiosTarea()">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tareas = [];
+    let tareaEditando = null;
+
+    function agregarTarea() {
+      const nombre = document.getElementById('nombreTarea').value;
+      const descripcion = document.getElementById('descripcionTarea').value;
+      const prioridad = document.getElementById('prioridadTarea').value;
+
+      if (nombre && descripcion && prioridad) {
+        const tarea = { nombre, descripcion, prioridad };
+        tareas.push(tarea);
+
+        document.getElementById('FormularioTarea').reset();
+        actualizarLista();
+      } else {
+        alert('Por favor, complete todos los campos antes de agregar la tarea.');
+      }
+    }
+
+    function actualizarLista() {
+      const listaTareas = document.getElementById('listaTareas');
+      listaTareas.innerHTML = '';
+
+      tareas.forEach((tarea, index) => {
+        const itemLista = document.createElement('li');
+        itemLista.className = 'list-group-item d-flex justify-content-between align-items-center';
+        itemLista.innerHTML = `
+          <div>
+            <strong>${tarea.nombre}</strong> - ${tarea.descripcion} 
+            <span class="badge bg-${getPriorityColor(tarea.prioridad)}">${tarea.prioridad}</span>
+          </div>
+          <div>
+            <button class="btn btn-warning btn-sm me-2" onclick="editarTarea(${index})">Editar</button>
+            <button class="btn btn-danger btn-sm" onclick="eliminarTarea(${index})">Eliminar</button>
+          </div>
+        `;
+        listaTareas.appendChild(itemLista);
+      });
+    }
+
+    function editarTarea(index) {
+      tareaEditando = index;
+      const tarea = tareas[index];
+
+      document.getElementById('editarNombreTarea').value = tarea.nombre;
+      document.getElementById('editarDescripcionTarea').value = tarea.descripcion;
+      document.getElementById('editarPrioridadTarea').value = tarea.prioridad;
+
+      const modal = new bootstrap.Modal(document.getElementById('editarTareaModal'));
+      modal.show();
+    }
+
+    function guardarCambiosTarea() {
+      if (tareaEditando !== null) {
+        const nombre = document.getElementById('editarNombreTarea').value;
+        const descripcion = document.getElementById('editarDescripcionTarea').value;
+        const prioridad = document.getElementById('editarPrioridadTarea').value;
+
+        if (nombre && descripcion && prioridad) {
+          tareas[tareaEditando] = { nombre, descripcion, prioridad };
+          tareaEditando = null;
+          actualizarLista();
+
+          const modal = bootstrap.Modal.getInstance(document.getElementById('editarTareaModal'));
+          modal.hide();
+        } else {
+          alert('Por favor, complete todos los campos antes de guardar los cambios.');
+        }
+      }
+    }
+
+    function eliminarTarea(index) {
+      tareas.splice(index, 1);
+      actualizarLista();
+    }
+
+    function getPriorityColor(prioridad) {
+      switch (prioridad) {
+        case 'Urgente':
+          return 'danger';
+        case 'Media':
+          return 'warning';
+        case 'Baja':
+          return 'success';
+        default:
+          return 'secondary';
+      }
+    }
+
+    function ordenarTareas(direccion) {
+      tareas.sort((a, b) => {
+        const prioridades = { 'Urgente': 1, 'Media': 2, 'Baja': 3 };
+
+        if (direccion === 'asc') {
+          return prioridades[a.prioridad] - prioridades[b.prioridad];
+        } else {
+          return prioridades[b.prioridad] - prioridades[a.prioridad];
+        }
+      });
+      actualizarLista();
+    }
+
+  </script>
+
+  <div class="mt-5 d-flex justify-content-center">
+    <button class="btn btn-secondary" onclick="window.history.back();">Regresar</button>
+  </div>
+
+
+  <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userModalLabel">Información Personal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Nombre:</strong> Jose Carlos</p>
+          <p><strong>Apellido:</strong> Morejon Osorio</p>
+          <p><strong>Teléfono:</strong> 5912-9451</p>
+          <p><strong>Correo:</strong> jmorejon@gmail.com</p>
+          <p><strong>Dpi:</strong> 4842541450101</p>
+          <script>
+          const params = new URLSearchParams(window.location.search);
+          const username = params.get('username');
+          const password = params.get('password');
+          document.addEventListener('DOMContentLoaded', () => {
+            if (username) {
+              document.querySelector('#userModal .modal-body').innerHTML += `
+                <p><strong>Usuario:</strong> ${username}</p>
+              `;
+            }
+  
+            if (password) {
+              document.querySelector('#userModal .modal-body').innerHTML += `
+                <p><strong>Contraseña:</strong> ${password}</p>
+              `;
+            }
+          });
+  
+        </script>
+          
+  
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

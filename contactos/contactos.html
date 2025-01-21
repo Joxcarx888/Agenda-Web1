@@ -29,7 +29,7 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="#">Contactar Soporte</a></li>
-                <li><a class="dropdown-item" href="#">Planes</a></li>
+                <li><a class="dropdown-item" href="https://www.movistar.com.mx/planes">Planes</a></li>
               </ul>
             </li>
           </ul>
@@ -120,9 +120,16 @@
         </div>
       </div>
 
+      <script>
+        const params = new URLSearchParams(window.location.search);
+        const username = params.get('username');
+        const password = params.get('password');
+      </script>
+
       <div class="mt-4 d-flex justify-content-between">
-        <a href="/nuevocontacto/nuevocontacto.html" class="btn btn-primary">Agregar Nuevo Contacto</a>
-        <a href="/favoritos/favoritos.html" class="btn btn-warning">Ver Favoritos</a>
+        <a href="/nuevocontacto/nuevocontacto.html?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;" class="btn btn-primary">Agregar Nuevo Contacto</a>
+        <a href="/favoritos/favoritos.html?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;" class="btn btn-warning">Ver Favoritos</a>
+        <a href="/toDoList/toDoList.html?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;" class="btn btn-success">Lista de Pendientes</a>
       </div>
     </div>
 
@@ -155,9 +162,6 @@
         <p><strong>Correo:</strong> jmorejon@gmail.com</p>
         <p><strong>Dpi:</strong> 4842541450101</p>
         <script>
-        const params = new URLSearchParams(window.location.search);
-        const username = params.get('username');
-        const password = params.get('password');
         document.addEventListener('DOMContentLoaded', () => {
           if (username) {
             document.querySelector('#userModal .modal-body').innerHTML += `
